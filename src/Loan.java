@@ -3,23 +3,21 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
 public class Loan{
-    private static final int MAX_LOAN = 350;
     private String loanId;
     private double amount;
-    private LocalDate startDate;
+    private LocalDate startDate = LocalDate.now();
     private LocalDate dueDate;
     private LOAN_STATUS status;
     private double paidAmount;
     private ArrayList<String> paymentHistory;
 
     private String consequences;
-    public enum LOAN_ASK{PENDING, APPROVED, REJECTED}
-    public enum LOAN_STATUS{ACTIVE, COMPLETED, OVERDUE}
+    public enum LOAN_STATUS {PENDING, APPROVED, REJECTED, ACTIVE, COMPLETED, OVERDUE}
     private int activeLoans;
     
 
-    public Loan(String loanId, double amount, LocalDate startDate, LocalDate dueDate) {
-        if (amount <= 0 || amount > MAX_LOAN) {
+    public Loan(int maxLoan, String loanId, double amount, LocalDate startDate, LocalDate dueDate) {
+        if (amount <= 0 || amount > maxLoan) {
             throw new IllegalArgumentException("Invalid loan amount");
         }
         this.loanId = loanId;
@@ -31,24 +29,6 @@ public class Loan{
         this.paymentHistory = new ArrayList<String>();
     }
 
-    public Loan(String loanId, User lender, double amount, LocalDate dueDate) {
-        if (amount <= 0 || amount > maxLoan) {
-            throw new IllegalArgumentException("Invalid loan amount");
-        }
-        this.loanId = loanId;
-        this.borrower = borrower;
-        this.lender = lender;
-        this.amount = amount;
-        this.startDate = LocalDate.now();
-        this.dueDate = LocalDate.;
-        this.status = LoanStatus.PENDING;
-        this.paidAmount = 0;
-        this.paymentHistory = new ArrayList<>();
-    }
-
-    private int maxLoan() {
-    
-    }
 
     public long daysLeftLoan() {
         return ChronoUnit.DAYS.between(this.dueDate, LocalDate.now());
@@ -60,22 +40,62 @@ public class Loan{
         // disable the user's ability to get more loans
     }
 
-    public void updateStatus(Loan newStatus)
+    public void updateStatus(LOAN_STATUS newStatus)
     {
         this.status = newStatus;
     }
 
-    public void loanPaid()
+    public void loanPaid(double paymentAmount)
     {
+        if (paymentAmount <= 0)
+        {
+            throw new IllegalArgumentException("Invalid payment amount");
+        }
+        this.paidAmount += paymentAmount;
+        paymentHistory.add("" + paymentAmount);
+
+        if (this.paidAmount >= this.amount)
+        {
+            this.status = LOAN_STATUS.COMPLETED;
+        }
         
     }
 
     public void approveLoan() {
-        if (status == LOAN_STATUS.PENDING) {
+        if (this.status == LOAN_STATUS.PENDING) {
             status = LOAN_STATUS.APPROVED;
-            this.startDate;
+            this.startDate = LocalDate.now();
         }
     }
+
+    public String getLoanId()
+    {
+        return this.loanId;
+    }
+
+    public double getAmount()
+    {
+        return this.amount;
+    }
+
+    public LocalDate getDueDate()
+    {
+        return this.dueDate;
+    }
+
+    public double getPaidAmount()
+    {
+        return this.paidAmount;
+    }
+
+    public ArrayList<String> getPaymentHistory()
+    {
+        return this.paymentHistory;
+    }
+
+    
+
+    
 
     public int getMaxLoan(){
         Ratiing rate = new Rating
