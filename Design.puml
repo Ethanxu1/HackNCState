@@ -1,0 +1,66 @@
+@startuml
+
+class User {
+  - userId: String
+  - name: String
+  - age: int
+  - phoneNumber: String
+  - connectionCode: String
+  - followers: List<User>
+  - following: List<User>
+  + calculateLoanLimit(): double
+  + updateRating(): void
+  + followUser(code: String): boolean
+  + generateConnectionCode(): void
+  + createPost(content: String): CommunicationPost
+}
+
+class Loan {
+    -maxLoan: int
+  - loanId: String
+  - amount: double
+  - interestRate: double
+  - startDate: int
+  - dueDate: Date
+  - status: LoanStatus
+  - consequences: String
+  + calculateConsequences(): void
+  + updateStatus(newStatus: LoanStatus): void
+}
+
+class Rating {
+  - score: double
+  - calculationDate: Date
+  + calculateRating(loanHistory: List<Loan>): void
+}
+
+class CommunicationPost {
+  - postId: String
+  - content: String
+  - date: Date
+  - comments: List<Comment>
+  + addComment(comment: Comment): void
+}
+
+class Chatbot {
+  + giveAdvice(user: User): String
+}
+
+class Comment {
+  - commentId: String
+  - content: String
+  - author: User
+  - date: Date
+}
+
+' Relationships
+User "1" *-- "1" Rating : has
+User "1" *-- "*" Loan : manages
+User "1" *-- "*" CommunicationPost : creates
+CommunicationPost "1" *-- "*" Comment : has
+User --> User : follows
+CommunicationPost --> User : author
+Comment --> User : author
+Chatbot .> User : advises
+Rating .> Loan : calculates using
+@enduml
