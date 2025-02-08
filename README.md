@@ -1,6 +1,6 @@
 # HackNCState
 
-#Judging Criteria
+# Judging Criteria
 Effectiveness
 How effective is the idea or analysis?
 Presentation
