@@ -2,13 +2,16 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-class Loan{
-    private int maxLoan;
+public class Loan{
+    private static final int MAX_LOAN = 350;
     private String loanId;
     private double amount;
     private LocalDate startDate;
     private LocalDate dueDate;
     private LOAN_STATUS status;
+    private double paidAmount;
+    private ArrayList<String> paymentHistory;
+
     private String consequences;
     public enum LOAN_ASK{PENDING, APPROVED, REJECTED}
     public enum LOAN_STATUS{ACTIVE, COMPLETED, OVERDUE}
@@ -16,16 +19,16 @@ class Loan{
     
 
     public Loan(String loanId, double amount, LocalDate startDate, LocalDate dueDate) {
-        if (amount <= 0 || amount > maxLoan) {
+        if (amount <= 0 || amount > MAX_LOAN) {
             throw new IllegalArgumentException("Invalid loan amount");
         }
         this.loanId = loanId;
         this.amount = amount;
-        this.startDate = start;
-        this.dueDate = LocalDate; //How do users approve loan requests and include due dates?
+        this.startDate = startDate;
+        this.dueDate = dueDate; //How do users approve loan requests and include due dates?
         this.status = LOAN_STATUS.PENDING;
         this.paidAmount = 0;
-        this.paymentHistory = new ArrayList<>();
+        this.paymentHistory = new ArrayList<String>();
     }
 
     public Loan(String loanId, User lender, double amount, LocalDate dueDate) {
