@@ -5,7 +5,6 @@ public class User
 {
     private final int userId; //Hash code?
     private String name;
-    private int age;
     private String phoneNumber;
     private final int connectionCode; // Hash code?
     public ArrayList<User> connections;
@@ -13,12 +12,11 @@ public class User
     private double activeLoanAmount;
     private ArrayList<Loan> allLoans;
 
-    public User(String name, int age, String phoneNumber) {
+    public User(String name, String phoneNumber) {
         this.name = name;
-        this.age = age;
         this.phoneNumber = phoneNumber;
-        this.userId = (name + "PiggyBank" + phoneNumber).hashCode();
-        this.connectionCode = ("PiggyBank" + phoneNumber).hashCode();
+        this.userId = (name + "PiggyBank" + this.phoneNumber).hashCode();
+        this.connectionCode = ("PiggyBank" + this.phoneNumber).hashCode();
         this.connections = new ArrayList<User>();
         this.activeLoanAmount = 0.0;
         this.allLoans = new ArrayList<Loan>();
@@ -36,6 +34,14 @@ public class User
             this.loanLimit = 200;
         }
         
+    }
+
+    public double getLoanLimit() {
+        return this.loanLimit;
+    }
+
+    private double calculateDollarsFromLimit() {
+        return this.getLoanLimit() - this.activeLoanAmount;
     }
 
     private int getConnectionCode(){
@@ -76,9 +82,14 @@ public class User
         this.allLoans.add(newLoan);
     } 
 
+    private void incrementActiveLoanAmount(double loanAmount) {
+        this.activeLoanAmount += loanAmount;
+    }
+
     public void addLoan(Loan newLoan)
     {
         allLoans.add(newLoan);
+        incrementActiveLoanAmount(newLoan.getAmount());
         this.calculateLoanLimit();
     }
 
@@ -89,9 +100,12 @@ public class User
 
     public Loan requestLoan(double amount, LocalDate dueDate)
     {
-        Loan newLoan = new Loan("L" + this.userId, amount, LocalDate.now(), dueDate);
-        this.addLoan(newLoan);
-        return newLoan;
+        if (dueDate == null || amount <= 0 || amount > this.calculateDollarsFromLimit()) {
+            throw new IllegalArgumentException("Invalid loan amount");
+        }
+            Loan newLoan = new Loan("L" + this.userId, amount, LocalDate.now(), dueDate);
+            this.addLoan(newLoan);
+            return newLoan;
     }
 
 
