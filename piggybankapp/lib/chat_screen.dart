@@ -14,11 +14,14 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final _messageController = TextEditingController();
 
-  String _formatDate(Timestamp timestamp) {
+  // Updated to accept a nullable Timestamp.
+  String _formatDate(Timestamp? timestamp) {
+    if (timestamp == null) return '';
     return DateFormat('MMM dd, yyyy').format(timestamp.toDate());
   }
 
-  String _formatTime(Timestamp timestamp) {
+  String _formatTime(Timestamp? timestamp) {
+    if (timestamp == null) return 'Sending...';
     return DateFormat('HH:mm').format(timestamp.toDate());
   }
 
@@ -32,7 +35,7 @@ class _ChatScreenState extends State<ChatScreen> {
             child: StreamBuilder(
               stream: context.read<ChatBackend>().getChatStream(null),
               builder: (context, snapshot) {
-                // Build chat messages
+                // Build chat messages.
                 if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
@@ -47,16 +50,16 @@ class _ChatScreenState extends State<ChatScreen> {
                   reverse: true,
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
-                    final message =
-                        messages[index].data() as Map<String, dynamic>;
+                    final message = messages[index].data() as Map<String, dynamic>;
                     final isBot = message['senderId'] == 'chatbot';
 
+                    // Safely extract the timestamp (it may be null initially).
+                    final Timestamp? timestamp = message['timestamp'];
+
                     return Align(
-                      alignment:
-                          isBot ? Alignment.centerLeft : Alignment.centerRight,
+                      alignment: isBot ? Alignment.centerLeft : Alignment.centerRight,
                       child: Container(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 4, horizontal: 8),
+                        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
                           color: isBot ? Colors.grey[200] : Colors.blue[100],
@@ -71,7 +74,7 @@ class _ChatScreenState extends State<ChatScreen> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              _formatTime(message['timestamp']),
+                              _formatTime(timestamp),
                               style: TextStyle(
                                 color: Colors.grey[600],
                                 fontSize: 12,
@@ -93,8 +96,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 Expanded(
                   child: TextField(
                     controller: _messageController,
-                    decoration:
-                        const InputDecoration(hintText: 'Type a message'),
+                    decoration: const InputDecoration(hintText: 'Type a message'),
                   ),
                 ),
                 IconButton(
@@ -113,9 +115,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (_messageController.text.isEmpty) return;
 
     try {
-      await context
-          .read<ChatBackend>()
-          .sendMessage(_messageController.text, null);
+      await context.read<ChatBackend>().sendMessage(_messageController.text, null);
       _messageController.clear();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
