@@ -1,25 +1,30 @@
 import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.Scanner;
 
 public class User 
 {
     private final int userId; //Hash code?
     private String name;
+    private String profileSection;
     private String phoneNumber;
     private final int connectionCode; // Hash code?
     public ArrayList<User> connections;
     private double loanLimit = 150.0;
     private double activeLoanAmount;
     private ArrayList<Loan> allLoans;
+    private ArrayList<Loan> pendingApprovalLoans;
 
-    public User(String name, String phoneNumber) {
+    public User(String name, String phoneNumber, String profileInput) {
         this.name = name;
         this.phoneNumber = phoneNumber;
+        this.profileSection = profileInput;
         this.userId = (name + "PiggyBank" + this.phoneNumber).hashCode();
         this.connectionCode = ("PiggyBank" + this.phoneNumber).hashCode();
         this.connections = new ArrayList<User>();
         this.activeLoanAmount = 0.0;
         this.allLoans = new ArrayList<Loan>();
+        this.pendingApprovalLoans = new ArrayList<Loan>();
     }
 
     public void calculateLoanLimit()
@@ -34,6 +39,18 @@ public class User
             this.loanLimit = 200;
         }
         
+    }
+
+    public void changeProfile(int userId) {
+        if (this.getUserId() != userId){
+            throw new IllegalArgumentException("The user ID inputted is incorrect");
+        }
+        Scanner inputObject = new Scanner(System.in);
+        System.out.println("Enter new profile description of your interests and goals");
+
+        String newProfileDescription = inputObject.nextLine();
+        this.profileSection = newProfileDescription;
+
     }
 
     public double getLoanLimit() {
@@ -78,19 +95,20 @@ public class User
         return this.allLoans;
     }
 
-    public void addAllLoans(Loan newLoan) {
-        this.allLoans.add(newLoan);
-    } 
 
     private void incrementActiveLoanAmount(double loanAmount) {
         this.activeLoanAmount += loanAmount;
     }
 
-    public void addLoan(Loan newLoan)
+    private void addLoan(Loan newLoan)
     {
-        allLoans.add(newLoan);
+        this.allLoans.add(newLoan);
         incrementActiveLoanAmount(newLoan.getAmount());
         this.calculateLoanLimit();
+    }
+
+    private void addPendingLoan(Loan newLoan) {
+        this.pendingApprovalLoans.add(newLoan);
     }
 
     public String getName()
@@ -98,14 +116,18 @@ public class User
         return this.name;
     }
 
-    public Loan requestLoan(double amount, LocalDate dueDate)
+    private int getUserId() {
+        return this.userId;
+    }
+
+
+    public void requestLoan(double amount, LocalDate dueDate)
     {
         if (dueDate == null || amount <= 0 || amount > this.calculateDollarsFromLimit()) {
             throw new IllegalArgumentException("Invalid loan amount");
         }
-            Loan newLoan = new Loan("L" + this.userId, amount, LocalDate.now(), dueDate);
-            this.addLoan(newLoan);
-            return newLoan;
+        Loan newLoan = new Loan("L" + this.userId, amount, LocalDate.now(), dueDate);
+        this.addPendingLoan(newLoan);
     }
 
 
