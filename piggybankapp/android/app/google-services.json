@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "561618186948",
+    "project_id": "piggy-bank-b2eab",
+    "storage_bucket": "piggy-bank-b2eab.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561618186948:android:49be0ba92f3c8afe5c4f91",
+        "android_client_info": {
+          "package_name": "com.example.piggybankapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCHKseASuFTXnr0hChqZap3ZZXYcvRsKOQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
