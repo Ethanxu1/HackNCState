@@ -12,7 +12,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Loan Manager'),
+        title: const Text('PiggyBank'),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
@@ -37,6 +37,12 @@ class HomeScreen extends StatelessWidget {
           ListTile(
             title: const Text('Profile'),
             leading: const Icon(Icons.person),
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (_) => ProfileScreen())),
+          ),
+          ListTile(
+            title: const Text('Connections'),
+            leading: const Icon(Icons.group),
             onTap: () => Navigator.push(context,
                 MaterialPageRoute(builder: (_) => ProfileScreen())),
           ),
