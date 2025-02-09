@@ -75,6 +75,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final _nameController = TextEditingController();
   final _ageController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _goalsController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +111,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 keyboardType: TextInputType.phone,
                 decoration: const InputDecoration(labelText: 'Phone Number'),
               ),
+              TextField(
+                controller: _goalsController,
+                decoration: const InputDecoration(labelText: 'Enter your goals'),
+              ),
               const SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _handleSignUp,
@@ -132,6 +138,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       final name = _nameController.text.trim();
       final age = int.parse(_ageController.text);
       final phone = _phoneController.text.trim();
+      final goals = _goalsController.text.trim();
 
       if (name.isEmpty || email.isEmpty || password.isEmpty) {
         throw Exception('Please fill in all required fields');
@@ -147,6 +154,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             name,
             age,
             phone,
+            goals
           );
 
       Navigator.pop(context);

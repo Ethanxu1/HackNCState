@@ -7,7 +7,7 @@ class LoginBackend with ChangeNotifier {
   
   User? get currentUser => _currentUser;
   
-  Future<void> signUp(String email, String password, String name, int age, String phone) async {
+  Future<void> signUp(String email, String password, String name, int age, String phone, String goals) async {
   try {
     final credential = await FirebaseAuth.instance
         .createUserWithEmailAndPassword(email: email, password: password);
@@ -20,7 +20,8 @@ class LoginBackend with ChangeNotifier {
       'age': age,
       'email': email,
       'phone': phone,
-      'rating': 5.0,
+      'goals': goals,
+      'rating': 500,
       'createdAt': FieldValue.serverTimestamp(),
     });
     
