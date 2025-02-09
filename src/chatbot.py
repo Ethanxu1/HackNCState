@@ -20,8 +20,8 @@ def chat_with_ai(input_file):
             top_p=0.7
         )
         
-        with open("chat_output.txt", "w", encoding="utf-8") as file:
-            file.write(f"{DELIMITER}{response.choices[0].message.content}{DELIMITER}")
+        with open("chat_output.txt", "a", encoding="utf-8") as file:
+            file.write(f"{DELIMITER}{response.choices[0].message.content}")
     # return response.choices[0].message.content
     # output = response.choices[0].message.content
     # return json.dumps({"response": output})
