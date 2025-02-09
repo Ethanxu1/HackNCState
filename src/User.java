@@ -46,7 +46,7 @@ public class User
             throw new IllegalArgumentException("The user ID inputted is incorrect");
         }
         Scanner inputObject = new Scanner(System.in);
-        System.out.println("Enter new profile description of your interests and goals");
+        System.out.println("Enter new profile description of your reason for requesting loan");
 
         String newProfileDescription = inputObject.nextLine();
         this.profileSection = newProfileDescription;
@@ -128,6 +128,7 @@ public class User
         }
         Loan newLoan = new Loan("L" + this.userId, amount, LocalDate.now(), dueDate);
         this.addPendingLoan(newLoan);
+        this.changeProfile(this.userId); //Profile section doubles as reason for loan for the prototype
     }
 
 
